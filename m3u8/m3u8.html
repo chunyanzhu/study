@@ -1,0 +1,106 @@
+<!--
+ * @Author: 朱春艳 Chunyan.Zhu@geely.com
+ * @Date: 2022-11-02 16:42:48
+ * @LastEditors: 朱春艳 Chunyan.Zhu@geely.com
+ * @LastEditTime: 2022-11-17 13:56:42
+ * @FilePath: /study/m3u8.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m3u8</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+</head>
+
+<body>
+  <!-- <video autoplay controls
+    src="https://valipl.cp31.ott.cibntv.net/69745E4893F30714C296821F4/03000300006360C9B78BB7800000005D87FAB8-53E1-4572-8BB0-6B4EAF65389D.m3u8?ccode=0502&duration=112&expire=18000&psid=c10888b5995d02b32af42b298803112241346&ups_client_netip=246e02ba&ups_ts=1667378490&ups_userid=&utid=SDfeGzKnWCACASRuArqOPgZX&vid=XNTkxNDg1NTAwMA%3D%3D&vkey=Bd29afdd4ffcd50a37e894a6f550bf9e4&eo=0&t=cfabaa54a38422d&cug=1&fms=4d03df8b74cb5708&tr=112&le=7836219f031422f5e90d2bf4cd84dc51&ckt=5&m_onoff=0&rid=20000000491631F35736442ACDD48425FD2ED8F902000000&type=3gphdv3&bc=2&dre=u37&si=73&dst=1&sm=1&operate_type=1"></video> -->
+
+  <video autoplay controls src="" id="video"></video>
+  <!-- https://valipl.cp31.ott.cibntv.net/69758C406FC3A7192D5A8673D/0300090000634F2E338BB780000000032D1F5D-1D67-4B43-B02F-ABF625417E4E-11-19005.m3u8?ccode=0502&duration=7484&expire=18000&psid=45651a1dc3e095a82834b1ded472107841346&ups_client_netip=246e02ba&ups_ts=1667379081&ups_userid=&utid=SDfeGzKnWCACASRuArqOPgZX&vid=XNTkxMDc5MjI4MA%3D%3D&vkey=B2ffeadab4e88e7e2c2a0340032dd2963&s=bacab10ae12f429186b0&eo=0&t=cffb67c33c63067&cug=1&fms=270752d43488d961&tr=360&le=31e6dfd54084cd4f557b6e4118c874cc&ckt=5&m_onoff=0&rid=20000000C04C56447DAA6100840F98F433D91DD002000000&type=mp4hd3v3&bc=2&dre=u37&si=73&dst=1&sm=1&operate_type=0 -->
+  <script>
+    var video = document.getElementById('video');
+    // var videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+    // var videoSrc = 'https://valipl.cp31.ott.cibntv.net/69758C406FC3A7192D5A8673D/0300090000634F2E338BB780000000032D1F5D-1D67-4B43-B02F-ABF625417E4E-11-19005.m3u8?ccode=0502&duration=7484&expire=18000&psid=45651a1dc3e095a82834b1ded472107841346&ups_client_netip=246e02ba&ups_ts=1667379081&ups_userid=&utid=SDfeGzKnWCACASRuArqOPgZX&vid=XNTkxMDc5MjI4MA%3D%3D&vkey=B2ffeadab4e88e7e2c2a0340032dd2963&s=bacab10ae12f429186b0&eo=0&t=cffb67c33c63067&cug=1&fms=270752d43488d961&tr=360&le=31e6dfd54084cd4f557b6e4118c874cc&ckt=5&m_onoff=0&rid=20000000C04C56447DAA6100840F98F433D91DD002000000&type=mp4hd3v3&bc=2&dre=u37&si=73&dst=1&sm=1&operate_type=0'
+    // var videoSrc = 'https://valipl.cp31.ott.cibntv.net/69745E4893F30714C296821F4/03000300006360C9B78BB7800000005D87FAB8-53E1-4572-8BB0-6B4EAF65389D.m3u8?ccode=0502&duration=112&expire=18000&psid=c10888b5995d02b32af42b298803112241346&ups_client_netip=246e02ba&ups_ts=1667378490&ups_userid=&utid=SDfeGzKnWCACASRuArqOPgZX&vid=XNTkxNDg1NTAwMA%3D%3D&vkey=Bd29afdd4ffcd50a37e894a6f550bf9e4&eo=0&t=cfabaa54a38422d&cug=1&fms=4d03df8b74cb5708&tr=112&le=7836219f031422f5e90d2bf4cd84dc51&ckt=5&m_onoff=0&rid=20000000491631F35736442ACDD48425FD2ED8F902000000&type=3gphdv3&bc=2&dre=u37&si=73&dst=1&sm=1&operate_type=1'
+    var videoSrc = './03000300006360C9B78BB7800000005D87FAB8-53E1-4572-8BB0-6B4EAF65389D.m3u8'
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = videoSrc;
+    } else {
+      var hls = new Hls();
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+
+
+      //以下是简单的源码实现
+      // https://nickdesaulniers.github.io/netfix/demo/bufferAll.html
+
+
+      // var assetURL = videoSrc || 'frag_bunny.mp4';
+      // // Need to be specific for Blink regarding codecs
+      // // ./mp4info frag_bunny.mp4 | grep Codec
+      // var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+      // if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+      //   var mediaSource = new MediaSource;
+      //   //console.log(mediaSource.readyState); // closed
+      //   video.src = URL.createObjectURL(mediaSource);
+      //   mediaSource.addEventListener('sourceopen', sourceOpen);
+      // } else {
+      //   console.error('Unsupported MIME type or codec: ', mimeCodec);
+      // }
+
+      // function sourceOpen (_) {
+      //   //console.log(this.readyState); // open
+      //   var mediaSource = this;
+      //   var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+      //   fetchAB(assetURL, function (buf) {
+      //     sourceBuffer.addEventListener('updateend', function (_) {
+      //       mediaSource.endOfStream();
+      //       video.play();
+      //       //console.log(mediaSource.readyState); // ended
+      //     });
+      //     sourceBuffer.appendBuffer(buf);
+      //   });
+      // };
+
+      // function fetchAB (url, cb) {
+      //   console.log(url);
+      //   var xhr = new XMLHttpRequest;
+      //   xhr.open('get', url);
+      //   xhr.responseType = 'arraybuffer';
+      //   xhr.onload = function () {
+      //     cb(xhr.response);
+      //   };
+      //   xhr.send();
+      // };
+
+
+
+    }
+    console.log('Hls.isSupported', Hls.isSupported())
+
+    // HLS.js is not supported on platforms that do not have Media Source
+    // Extensions (MSE) enabled.
+    //
+    // When the browser has built-in HLS support (check using `canPlayType`),
+    // we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video
+    // element through the `src` property. This is using the built-in support
+    // of the plain video element, without using HLS.js.
+    //
+    // Note: it would be more normal to wait on the 'canplay' event below however
+    // on Safari (where you are most likely to find built-in HLS support) the
+    // video.src URL must be on the user-driven white-list before a 'canplay'
+    // event will be emitted; the last video event that can be reliably
+    // listened-for when the URL is not on the white-list is 'loadedmetadata'.
+
+
+  </script>
+</body>
+
+</html>
